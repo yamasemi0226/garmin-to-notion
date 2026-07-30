@@ -9,7 +9,7 @@ on:
         type: number
         default: 10
 env:
-  TZ: 'America/Toronto'
+  TZ: 'Asia/Tokyo'
 
 jobs:
   sync:
