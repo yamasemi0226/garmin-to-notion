@@ -8,6 +8,13 @@ on:
       GARMIN_ACTIVITIES_FETCH_LIMIT:
         type: number
         default: 10
+concurrency:
+  group: garmin-auth-and-sync
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
 env:
   TZ: 'Asia/Tokyo'
 
@@ -15,16 +22,18 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Set up uv
         uses: astral-sh/setup-uv@v5
 
       - name: Install dependencies
-        run: uv sync
+        run: uv sync --frozen
 
       - name: Run script
         env:
+          GARMIN_STATE_KEY: ${{ secrets.GARMIN_STATE_KEY }}
+          GARMIN_STATE_GITHUB_TOKEN: ${{ secrets.GARMIN_STATE_GITHUB_TOKEN }}
           GARMIN_AUTH_TOKEN: ${{ secrets.GARMIN_AUTH_TOKEN }}
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           NOTION_DB_ID: ${{ secrets.NOTION_DB_ID }}
